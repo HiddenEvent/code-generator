@@ -1,4 +1,13 @@
-/* 1. 전체 테이블 명 + 코멘트 조회 */
+/* 1. 전체 스키마명 조회 (기본스키마 제외) */
+SELECT DISTINCT
+    N.NSPNAME AS SCHEMA_NAME
+FROM PG_CATALOG.PG_CLASS C
+    INNER JOIN PG_CATALOG.PG_NAMESPACE N ON C.RELNAMESPACE=N.OID
+WHERE C.RELKIND = 'r'
+AND NSPNAME NOT IN ('pg_catalog','information_schema');
+
+
+/* 2. 전체 테이블 명 + 코멘트 조회 */
 SELECT
     N.NSPNAME AS SCHEMA_NAME,
     C.RELNAME AS TABLE_NAME,
@@ -9,7 +18,7 @@ WHERE C.RELKIND = 'r'
 AND NSPNAME = 'public'/* 스키마 명 */
 ORDER BY C.OID;
 
-/* 2. 선택한 테이블 -> 모든 컬럼 + 코멘트 조회 + 키종류 + FK 테이블 정보 */
+/* 3. 선택한 테이블 -> 모든 컬럼 + 코멘트 조회 + 키종류 + FK 테이블 정보 */
 SELECT
     ISC.ordinal_position AS ORD_NUM,
     KEY_INFO.KEY_TYPE,
